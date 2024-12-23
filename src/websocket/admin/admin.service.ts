@@ -1,27 +1,29 @@
 import {
+  ConnectedSocket,
   OnGatewayConnection,
-  OnGatewayDisconnect,
-  //OnGatewayInit,
   WebSocketGateway,
-  //WebSocketServer,
 } from '@nestjs/websockets';
 
-//import { Server } from 'socket.io';
+@WebSocketGateway({ cors: { origin: '*' } })
+export class SocketAdminService implements OnGatewayConnection {
+  handleEvent(dto: any, @ConnectedSocket() client: any) {
+    const res = { type: 'someType', dto };
+    client.emit('client-path', res);
+  }
 
-const corsOption = {
-  origin: '*',
-};
+  handleConnection(client: any): any {
+    console.log('ПРОИЗОШЛО ПОДКЛЮЧЕНИЕ ПО WEBSOKET');
+    console.log('СОДЕРЖИМОЕ ОБЬЕКТА client');
 
-@WebSocketGateway({ cors: { corsOption } })
-export class SocketAdminService
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
-  /*@WebSocketServer()
-  server: Server;*/
+    console.log(client);
+  }
 
-  handleConnection(client: any, ...args): any {}
+  // когда фронтенд будет подключатся к WebSocketСЕРВИСУ
+  // тогда фронтенд отправит запрос на уУСТАНОВЛЕНИЕ СОЕДЕНЕНИЯ
+  // и тогда отработает этот метод
 
-  handleDisconnect(client: any): any {}
-
-  //afterInit(server: Server) {}
+  /* в этом методе например будет ПРОВЕРКА АУТЕНТИФМКАЦИИ Клиента
+  -тоесть его логин и парол проверятся
+  -------ИЛИ ТОКЕН ПРОВЕРИТСЯ
+  ----ИЛИ УВЕДОМИТЬ КАКИХ ЛИБО ПОЛЬЗОВАТЕЛЕЙ О ПОДКЛЮЧЕНИИ*/
 }
