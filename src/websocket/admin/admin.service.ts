@@ -13,7 +13,7 @@ export class SocketAdminService
   implements OnGatewayConnection, OnGatewayDisconnect
 {
   @SubscribeMessage('server-path')
-  handleEvent(@MessageBody() dto: any, @ConnectedSocket() client: any) {
+  handleEvent(@MessageBody() dto: any, @ConnectedSocket() client: Socket) {
     const res = { type: 'someType', dto };
     client.emit('client-path', res);
     console.log('dto:', dto);
