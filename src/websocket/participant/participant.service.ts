@@ -15,7 +15,12 @@ export class SocketParticipantService
   @WebSocketServer()
   server: Server;
 
-  handleEvent() {}
+  handleEvent(res: any) {
+    console.log(res);
+    const response = 'true';
+    const savedClient = Array.from(this.clients.keys())[0]; // Получаем первого клиента
+    savedClient.emit('participant-path', response);
+  }
 
   handleConnection(client: Socket): any {
     const roomKey = client.handshake.headers.roomkey;
