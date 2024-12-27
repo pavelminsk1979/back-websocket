@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 
-@WebSocketGateway({ cors: { origin: '*' } })
+@WebSocketGateway({ cors: { origin: '*' }, namespace: '/admin' })
 export class SocketAdminService
   implements OnGatewayConnection, OnGatewayDisconnect
 {
