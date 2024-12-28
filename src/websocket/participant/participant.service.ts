@@ -16,8 +16,8 @@ export class SocketParticipantService
   server: Server;
 
   handleEvent(res: any) {
-    console.log(res);
-    const response = 'true';
+    const response = res.dto.value;
+    console.log(response);
     const savedClient = Array.from(this.clients.keys())[0]; // Получаем первого клиента
     savedClient.emit('participant-path', response);
   }
@@ -30,4 +30,14 @@ export class SocketParticipantService
   }
 
   handleDisconnect(client: any): any {}
+
+  sendMessagePaticipant(id) {
+    for (const [savedClient, savedParticipantId] of this.clients) {
+      if (savedParticipantId === id) {
+        savedClient.emit('participant-event', `send event ${id}`);
+      } else {
+        savedClient.emit('participant-event', `error incorrect id`);
+      }
+    }
+  }
 }
