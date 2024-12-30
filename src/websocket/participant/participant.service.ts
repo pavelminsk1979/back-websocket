@@ -17,7 +17,10 @@ export class SocketParticipantService
 
   handleEvent(res: any) {
     const response = res.dto.value;
+    console.log('1111111111111111111111111111111');
     console.log(response);
+    console.log('1111111111111111111111111111111');
+
     const savedClient = Array.from(this.clients.keys())[0]; // Получаем первого клиента
     savedClient.emit('participant-path', response);
   }
@@ -32,6 +35,7 @@ export class SocketParticipantService
   handleDisconnect(client: any): any {}
 
   sendMessagePaticipant(id) {
+    console.log('idID', id);
     for (const [savedClient, savedParticipantId] of this.clients) {
       if (savedParticipantId === id) {
         savedClient.emit('participant-event', `send event ${id}`);

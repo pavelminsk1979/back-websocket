@@ -2,6 +2,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { io, Socket } from 'socket.io-client';
 import { AppModule } from '../src/app.module';
+import * as request from 'supertest';
 
 describe('ws-tests', () => {
   let app: INestApplication;
@@ -34,6 +35,7 @@ describe('ws-tests', () => {
           token: '123',
           roomKey: 'room-test1',
         },
+        forceNew: true,
       };
 
       const client = io(baseAdress + 'admin', option);
@@ -48,6 +50,7 @@ describe('ws-tests', () => {
           participantId: '2',
           roomKey: 'room-test2',
         },
+        forceNew: true,
       };
 
       const client = io(baseAdress + 'participant', option);
@@ -78,5 +81,25 @@ describe('ws-tests', () => {
       type: 'someType',
       dto: { value: 'test', id: '12' },
     });
+  });
+
+  /*  этот тест тестирует начиная с КОНТРОЛЛЕРА
+  это http запрос*/
+  it('should2', async function () {
+    await request(httpServer)
+      .post('/event')
+      .send({ participantId: '2' })
+      .expect(HttpStatus.CREATED);
+
+    const result = await new Promise((res) => {
+      participantClient.on('participant-event', (data) => {
+        res(data);
+      });
+    });
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    console.log(result);
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
+    expect(result).toEqual('send event 2');
   });
 });
